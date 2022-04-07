@@ -47,7 +47,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Data.Func.Services.Notificati
         /// the sent notifications.</param>
         /// <param name="log">The logger.</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        public async Task<NotificationDataEntity> UpdateNotificationDataAsync(
+        public async Task<UpdateNotificationDataEntity> UpdateNotificationDataAsync(
             string notificationId,
             string orchestrationStatus,
             bool shouldForceCompleteNotification,
@@ -65,7 +65,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Data.Func.Services.Notificati
                 var lastSentDate = aggregatedSentNotificationDataResults.LastSentDate;
 
                 // Create the general update.
-                var notificationDataEntityUpdate = new NotificationDataEntity
+                var notificationDataEntityUpdate = new UpdateNotificationDataEntity
                 {
                     PartitionKey = NotificationDataTableNames.SentNotificationsPartition,
                     RowKey = notificationId,
@@ -137,7 +137,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Data.Func.Services.Notificati
             return functionResp.RuntimeStatus;
         }
 
-        private void SetSentStatus(ref NotificationDataEntity notificationDataEntityUpdate, DateTime? lastSentDate)
+        private void SetSentStatus(ref UpdateNotificationDataEntity notificationDataEntityUpdate, DateTime? lastSentDate)
         {
             // Update the status to Sent.
             notificationDataEntityUpdate.Status = NotificationStatus.Sent.ToString();
@@ -149,7 +149,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Data.Func.Services.Notificati
             notificationDataEntityUpdate.SentDate = lastSentDate ?? DateTime.UtcNow;
         }
 
-        private void SetCanceledStatus(ref NotificationDataEntity notificationDataEntityUpdate, int canceledCount)
+        private void SetCanceledStatus(ref UpdateNotificationDataEntity notificationDataEntityUpdate, int canceledCount)
         {
             notificationDataEntityUpdate.Status = NotificationStatus.Canceled.ToString();
 
@@ -159,7 +159,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Data.Func.Services.Notificati
             notificationDataEntityUpdate.SentDate = DateTime.UtcNow;
         }
 
-        private void SetSentStatusWithUnknownCount(ref NotificationDataEntity notificationDataEntityUpdate, int unknownCount)
+        private void SetSentStatusWithUnknownCount(ref UpdateNotificationDataEntity notificationDataEntityUpdate, int unknownCount)
         {
             notificationDataEntityUpdate.Status = NotificationStatus.Sent.ToString();
 
